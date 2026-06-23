@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AETHERIA — The Future, In Motion</title>
+<meta name="description" content="An immersive parallax journey through the future of technology.">
+
+<!-- Google Fonts: Space Grotesk (display) + Inter (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   AETHERIA — Parallax Future-of-Technology Landing Page
+   Stylesheet
+   ============================================================ */
+
+/* ---------- DESIGN TOKENS ---------- */
+:root{
+  /* Deep Space Blue / Neon Cyan / Electric Purple / Soft White palette */
+  --bg-deep:#05071a;
+  --bg-deep-2:#0b0f30;
+  --bg-deep-3:#11103a;
+  --cyan:#00f0ff;
+  --purple:#a855f7;
+  --magenta:#ff3fb0;
+  --white:#f1f4ff;
+  --glass:rgba(255,255,255,0.06);
+  --glass-border:rgba(255,255,255,0.12);
+  --shadow:rgba(0,0,0,0.45);
+
+  --font-display:'Space Grotesk', sans-serif;
+  --font-body:'Inter', sans-serif;
+
+  --ease:cubic-bezier(.16,.84,.32,1);
+  --section-pad: clamp(24px, 6vw, 80px);
+}
+
+/* Light theme: same hues, lab-clean future surface */
+:root[data-theme="light"]{
+  --bg-deep:#eef1fb;
+  --bg-deep-2:#e2e7f8;
+  --bg-deep-3:#d6ddf3;
+  --cyan:#0891b2;
+  --purple:#7c3aed;
+  --magenta:#d6258a;
+  --white:#0a0e27;
+  --glass:rgba(10,14,39,0.045);
+  --glass-border:rgba(10,14,39,0.1);
+  --shadow:rgba(20,30,80,0.12);
+}
+
+/* ---------- RESET ---------- */
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg-deep);
+  color:var(--white);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  transition:background .5s var(--ease), color .5s var(--ease);
+}
+img,svg{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;}
+h1,h2,h3{font-family:var(--font-display);margin:0;font-weight:600;}
+p{margin:0;line-height:1.6;}
+::selection{background:var(--purple);color:var(--white);}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+}
+
+/* ---------- CUSTOM CURSOR ---------- */
+.cursor{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.cursor-dot{width:6px;height:6px;background:var(--cyan);}
+.cursor-ring{width:34px;height:34px;border:1.5px solid var(--cyan);transition:width .25s var(--ease),height .25s var(--ease),opacity .25s var(--ease);}
+.cursor-ring.hovering{width:54px;height:54px;border-color:var(--magenta);}
+@media (hover:none){ .cursor{display:none;} }
+
+/* ---------- SCROLL PROGRESS BAR ---------- */
+.progress-bar{position:fixed;top:0;left:0;width:100%;height:3px;z-index:1000;background:rgba(255,255,255,0.05);}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--magenta));box-shadow:0 0 12px var(--cyan);}
+
+/* ---------- SIGNATURE SPINE ---------- */
+.spine{
+  position:absolute;top:0;left:50%;width:2px;height:100%;
+  transform:translateX(-50%);
+  z-index:1;pointer-events:none;
+  overflow:visible;
+}
+.spine #spinePath{
+  fill:none;stroke:var(--cyan);stroke-width:1.4;
+  stroke-dasharray:4000;stroke-dashoffset:4000;
+  opacity:.35;
+  vector-effect:non-scaling-stroke;
+}
+.spine #spineComet{
+  fill:var(--cyan);
+  filter:drop-shadow(0 0 6px var(--cyan)) drop-shadow(0 0 14px var(--purple));
+}
+@media (max-width:900px){ .spine{display:none;} }
+
+/* ---------- NAVIGATION ---------- */
+.nav{
+  position:fixed;top:0;left:0;width:100%;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px clamp(20px,4vw,56px);
+  background:linear-gradient(to bottom, rgba(5,7,26,.55), transparent);
+  backdrop-filter:blur(6px);
+  transition:background .4s var(--ease), padding .3s var(--ease);
+}
+.nav.scrolled{
+  background:var(--glass);
+  border-bottom:1px solid var(--glass-border);
+  padding:12px clamp(20px,4vw,56px);
+}
+.nav-logo{font-family:var(--font-display);font-weight:700;letter-spacing:.04em;font-size:1.1rem;}
+.nav-logo span{color:var(--cyan);}
+.nav-links{display:flex;align-items:center;gap:clamp(14px,2vw,32px);font-size:.9rem;}
+.nav-links a{position:relative;opacity:.85;transition:opacity .25s,color .25s;}
+.nav-links a:hover{opacity:1;color:var(--cyan);}
+.nav-links a::after{
+  content:'';position:absolute;left:0;bottom:-6px;width:0;height:1.5px;
+  background:var(--cyan);transition:width .3s var(--ease);
+}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{
+  border:1px solid var(--glass-border);padding:8px 16px;border-radius:30px;
+  background:var(--glass);
+}
+.nav-cta::after{display:none;}
+.nav-cta:hover{background:var(--cyan);color:var(--bg-deep);border-color:var(--cyan);}
+.nav-toggles{display:flex;gap:10px;}
+.icon-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--glass);border:1px solid var(--glass-border);transition:transform .25s var(--ease),background .25s;}
+.icon-btn:hover{transform:scale(1.08);background:rgba(0,240,255,0.12);}
+.icon-btn svg{width:17px;height:17px;color:var(--white);}
+
+.nav-hamburger{display:none;}
+@media (max-width:760px){
+  .nav-hamburger{display:flex;}
+  .nav-links{
+    position:fixed;top:0;right:0;height:100vh;width:min(72vw,300px);
+    flex-direction:column;justify-content:center;gap:28px;
+    background:var(--bg-deep-2);
+    transform:translateX(100%);transition:transform .4s var(--ease);
+    font-size:1.1rem;
+  }
+  .nav-links.open{transform:translateX(0);}
+}
+
+/* ---------- LAYOUT PRIMITIVES ---------- */
+.section{
+  position:relative;
+  min-height:100vh;
+  width:100%;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  isolation:isolate;
+}
+.section-inner{
+  position:relative;z-index:5;
+  width:100%;max-width:1180px;
+  padding:0 var(--section-pad);
+}
+.section-inner.narrow{max-width:760px;}
+.section-inner.center{text-align:center;margin:0 auto;}
+.layer{position:absolute;inset:0;will-change:transform;}
+.float-shape{position:absolute;will-change:transform;}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:18px;font-weight:500;
+}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.section-title{font-size:clamp(2rem,5vw,3.4rem);line-height:1.1;letter-spacing:-.01em;}
+.section-title.big{font-size:clamp(2.6rem,7vw,5rem);}
+.section-title .accent{color:var(--cyan);}
+.section-lede{margin-top:18px;font-size:clamp(1rem,1.6vw,1.2rem);color:rgba(241,244,255,0.75);max-width:560px;}
+.section-inner.center .section-lede{margin-inline:auto;}
+.accent-text{color:var(--magenta);}
+
+/* ============================================================
+   1. HERO
+   ============================================================ */
+.hero{background:radial-gradient(ellipse at 50% 20%, var(--bg-deep-3), var(--bg-deep) 70%);}
+.bg-stars{position:absolute;inset:0;width:100%;height:100%;}
+
+.bg-nebula{
+  background:radial-gradient(circle at 30% 30%, rgba(168,85,247,.35), transparent 55%),
+             radial-gradient(circle at 75% 60%, rgba(0,240,255,.22), transparent 50%);
+  mix-blend-mode:screen;
+}
+.bg-mountains{bottom:0;top:auto;height:42%;}
+.bg-mountains svg{width:100%;height:100%;fill:var(--bg-deep-2);opacity:.9;}
+
+.mid-grid{
+  background-image:
+    linear-gradient(rgba(0,240,255,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,.08) 1px, transparent 1px);
+  background-size:60px 60px;
+  -webkit-mask-image:linear-gradient(to top, black, transparent 70%);
+  mask-image:linear-gradient(to top, black, transparent 70%);
+  transform:perspective(500px) rotateX(60deg) translateY(20%);
+  bottom:-20%;height:60%;top:auto;
+}
+
+.shape-ring{
+  top:18%;right:12%;width:160px;height:160px;border-radius:50%;
+  border:2px solid var(--cyan);opacity:.55;
+  box-shadow:0 0 40px rgba(0,240,255,.25) inset;
+  animation:spin-slow 18s linear infinite, float-y 6s ease-in-out infinite;
+}
+.shape-cube{
+  bottom:20%;left:10%;width:90px;height:90px;
+  border:2px solid var(--purple);transform:rotate(20deg);
+  opacity:.6;animation:float-y 7s ease-in-out infinite reverse;
+}
+@keyframes spin-slow{to{transform:rotate(360deg);}}
+@keyframes float-y{0%,100%{translate:0 0;}50%{translate:0 -22px;}}
+
+.hero-copy{position:relative;z-index:5;text-align:center;max-width:900px;padding:0 24px;}
+.hero-title{font-size:clamp(2.6rem,9vw,6.2rem);line-height:1.02;font-weight:700;letter-spacing:-.02em;}
+.hero-title .line{display:block;overflow:hidden;}
+.hero-title .accent{
+  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--magenta));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% auto;animation:gradient-shift 6s linear infinite;
+}
+@keyframes gradient-shift{to{background-position:200% center;}}
+.hero-sub{margin-top:22px;font-size:clamp(1rem,1.6vw,1.25rem);color:rgba(241,244,255,.7);}
+
+.scroll-indicator{
+  position:absolute;bottom:38px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:.72rem;letter-spacing:.2em;color:rgba(241,244,255,.6);z-index:5;
+}
+.mouse-icon{width:24px;height:38px;border:1.5px solid currentColor;border-radius:14px;position:relative;}
+.wheel{position:absolute;top:6px;left:50%;width:3px;height:7px;background:var(--cyan);border-radius:2px;transform:translateX(-50%);animation:scroll-wheel 1.6s ease-in-out infinite;}
+@keyframes scroll-wheel{0%{opacity:1;top:6px;}70%{opacity:0;top:18px;}100%{opacity:0;top:6px;}}
+
+/* ============================================================
+   2. JOURNEY
+   ============================================================ */
+.journey{background:linear-gradient(180deg, var(--bg-deep), var(--bg-deep-3));}
+.bg-gradient-journey{background:radial-gradient(circle at 80% 20%, rgba(168,85,247,.25), transparent 55%);}
+
+.island{display:flex;flex-direction:column;align-items:center;}
+.island-1{top:14%;left:8%;}
+.island-2{top:55%;right:10%;}
+.island-body{
+  width:140px;height:50px;border-radius:50% 50% 45% 45%/60% 60% 40% 40%;
+  background:linear-gradient(160deg,var(--bg-deep-3),var(--purple) 130%);
+  box-shadow:0 30px 60px var(--shadow);
+  animation:float-y 8s ease-in-out infinite;
+}
+.island-body.small{width:90px;height:34px;animation-duration:6s;}
+.island-glow{width:60%;height:14px;background:var(--cyan);filter:blur(14px);opacity:.4;margin-top:-6px;border-radius:50%;}
+.satellite-deco{
+  top:70%;left:18%;width:30px;height:14px;border:2px solid var(--cyan);border-radius:3px;opacity:.7;
+  animation:float-y 5s ease-in-out infinite;
+}
+
+.story-lines{margin-top:8px;}
+.reveal-line{
+  font-size:clamp(1.2rem,2.6vw,1.9rem);font-family:var(--font-display);font-weight:500;
+  line-height:1.45;color:rgba(241,244,255,.4);
+  opacity:0;transform:translateY(30px);
+}
+
+/* ============================================================
+   3. INNOVATION
+   ============================================================ */
+.innovation{background:radial-gradient(ellipse at 50% 0%, var(--bg-deep-3), var(--bg-deep) 65%);}
+.circuit-lines{
+  background-image:
+    linear-gradient(90deg, rgba(0,240,255,.06) 1px, transparent 1px),
+    linear-gradient(rgba(0,240,255,.06) 1px, transparent 1px);
+  background-size:90px 90px;
+  opacity:.5;
+}
+
+.card-grid{
+  margin-top:48px;display:grid;gap:24px;
+  grid-template-columns:repeat(4,1fr);
+  perspective:1200px;
+}
+.tilt-card{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:18px;
+  padding:1px;backdrop-filter:blur(10px);
+  transform-style:preserve-3d;
+  opacity:0;transform:translateY(40px);
+}
+.tilt-inner{
+  padding:28px 22px;border-radius:17px;height:100%;
+  transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+}
+.tilt-card:hover .tilt-inner{box-shadow:0 20px 50px var(--shadow);}
+.card-icon{width:42px;height:42px;color:var(--cyan);margin-bottom:18px;}
+.tilt-card h3{font-size:1.1rem;margin-bottom:10px;}
+.tilt-card p{font-size:.92rem;color:rgba(241,244,255,.65);}
+
+@media (max-width:980px){ .card-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .card-grid{grid-template-columns:1fr;} }
+
+/* ============================================================
+   4. COSMOS / SPACE EXPLORATION
+   ============================================================ */
+.cosmos{background:radial-gradient(ellipse at 50% 50%, var(--bg-deep-2), var(--bg-deep) 80%);}
+
+.planet{position:absolute;border-radius:50%;}
+.planet-1{
+  width:220px;height:220px;top:10%;left:8%;
+  background:radial-gradient(circle at 35% 30%, var(--purple), var(--bg-deep-3) 75%);
+  box-shadow:0 0 80px rgba(168,85,247,.35);
+}
+.planet-2{
+  width:120px;height:120px;top:55%;right:14%;
+  background:radial-gradient(circle at 35% 30%, var(--cyan), var(--bg-deep-3) 75%);
+  box-shadow:0 0 60px rgba(0,240,255,.35);
+}
+.planet-3{
+  width:60px;height:60px;top:25%;right:30%;
+  background:radial-gradient(circle at 35% 30%, var(--magenta), var(--bg-deep-3) 75%);
+  box-shadow:0 0 40px rgba(255,63,176,.4);
+}
+.orbit-ring{
+  position:absolute;top:65%;left:25%;width:280px;height:280px;border-radius:50%;
+  border:1px dashed rgba(241,244,255,.18);
+  animation:spin-slow 30s linear infinite;
+}
+.satellite{
+  position:absolute;top:-6px;left:calc(50% - 6px);width:12px;height:8px;
+  background:var(--white);border-radius:2px;box-shadow:0 0 10px var(--cyan);
+}
+
+/* ============================================================
+   5. FUTURE CITY
+   ============================================================ */
+.city{background:linear-gradient(180deg, var(--bg-deep-2), var(--bg-deep));}
+.city-sky{background:linear-gradient(180deg, rgba(168,85,247,.18), transparent 60%);}
+.light-sweep{
+  background:linear-gradient(100deg, transparent 30%, rgba(0,240,255,.12) 45%, transparent 60%);
+  background-size:250% 100%;
+  animation:sweep 9s linear infinite;
+  mix-blend-mode:screen;
+}
+@keyframes sweep{0%{background-position:120% 0;}100%{background-position:-20% 0;}}
+
+.city-back{bottom:0;top:auto;height:55%;}
+.city-back svg{width:100%;height:100%;fill:var(--bg-deep-3);opacity:.85;}
+.city-mid{bottom:0;top:auto;height:48%;}
+.city-mid svg{width:100%;height:100%;fill:#070a22;}
+:root[data-theme="light"] .city-mid svg{fill:#b9c1e4;}
+
+.drone{
+  width:16px;height:6px;border-radius:2px;background:var(--cyan);
+  box-shadow:0 0 10px var(--cyan);top:30%;left:20%;
+  animation:float-y 4s ease-in-out infinite;
+}
+.drone-2{top:48%;left:75%;width:10px;height:5px;animation-duration:5.5s;background:var(--magenta);box-shadow:0 0 10px var(--magenta);}
+
+/* ============================================================
+   6. CTA
+   ============================================================ */
+.cta{background:radial-gradient(ellipse at 50% 70%, var(--bg-deep-3), var(--bg-deep) 70%);}
+.bg-gradient-cta{background:radial-gradient(circle at 50% 30%, rgba(0,240,255,.18), transparent 55%);}
+.cta-ring{
+  top:10%;left:50%;width:420px;height:420px;margin-left:-210px;border-radius:50%;
+  border:1px solid rgba(0,240,255,.18);
+}
+
+.magnetic-btn{
+  margin-top:38px;display:inline-flex;align-items:center;gap:12px;
+  padding:18px 34px;border-radius:50px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  color:#040414;font-weight:600;font-size:1rem;
+  box-shadow:0 10px 40px rgba(0,240,255,.25);
+  transition:transform .2s var(--ease), box-shadow .3s var(--ease);
+}
+.magnetic-btn:hover{box-shadow:0 14px 50px rgba(168,85,247,.4);}
+.magnetic-btn svg{width:18px;height:18px;transition:transform .3s var(--ease);}
+.magnetic-btn:hover svg{transform:translateX(4px);}
+
+/* ---------- TOAST ---------- */
+.toast{
+  position:fixed;bottom:32px;left:50%;transform:translate(-50%,20px);
+  background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(10px);
+  padding:14px 24px;border-radius:30px;font-size:.9rem;
+  opacity:0;pointer-events:none;transition:opacity .35s var(--ease), transform .35s var(--ease);
+  z-index:2000;
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* ---------- FOOTER ---------- */
+.site-footer{
+  position:relative;z-index:5;text-align:center;padding:40px 20px;
+  font-size:.82rem;color:rgba(241,244,255,.45);background:var(--bg-deep);
+}
+
+/* ---------- GENERIC REVEAL UTILITY (used by GSAP) ---------- */
+.gsap-reveal{opacity:0;transform:translateY(50px);}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:760px){
+  .section-lede{font-size:1rem;}
+  .planet-1{width:140px;height:140px;}
+  .planet-2{width:80px;height:80px;}
+  .orbit-ring{width:180px;height:180px;}
+  .cta-ring{width:280px;height:280px;margin-left:-140px;}
+}
+
+/* ============================================================
+   PLAYFUL & INTERACTIVE EXTRAS
+   ============================================================ */
+
+/* Bouncy ease used across hover/click micro-interactions. */
+:root{ --bounce: cubic-bezier(.34,1.56,.64,1); }
+
+/* Floating decorative shapes perk up when the cursor lands on them.
+   Uses the standalone `scale` property so it never fights with the
+   `transform` (scroll-parallax) or `translate` (mouse-parallax) that
+   are already being driven by JS on these same elements. */
+.shape-ring, .shape-cube, .island, .satellite-deco,
+.planet, .satellite, .drone {
+  transition: scale .45s var(--bounce), filter .3s ease;
+  cursor: pointer;
+}
+.shape-ring:hover, .shape-cube:hover, .island:hover, .satellite-deco:hover,
+.planet:hover, .satellite:hover, .drone:hover {
+  scale: 1.22;
+  filter: brightness(1.25);
+}
+
+/* Nav links wiggle a little on hover instead of just underlining. */
+@keyframes link-wiggle{
+  0%,100%{ rotate: 0deg; }
+  25%{ rotate: -4deg; }
+  75%{ rotate: 4deg; }
+}
+.nav-links a:not(.nav-cta):hover{ animation: link-wiggle .35s var(--bounce); }
+
+/* Buttons squish on press for tactile feedback. */
+.icon-btn:active, .nav-cta:active, .magnetic-btn:active, .tilt-card:active{
+  scale: 0.92;
+}
+.magnetic-btn, .icon-btn, .nav-cta{ transition: scale .15s var(--bounce), transform .2s var(--ease), background .25s, box-shadow .3s var(--ease); }
+
+/* Logo gives a happy little bounce when clicked. */
+.nav-logo{ display:inline-block; transition: scale .2s var(--bounce); }
+.nav-logo.bounce{ animation: logo-bounce .6s var(--bounce); }
+@keyframes logo-bounce{
+  0%{ scale:1; } 30%{ scale:1.25; rotate:-6deg; } 60%{ scale:.95; rotate:4deg; } 100%{ scale:1; rotate:0; }
+}
+
+/* Cursor ring gives a little pulse of delight whenever a star
+   "merges" into it — the visual payoff for the cursor/starfield
+   interaction. Triggered via JS by toggling this class briefly. */
+.cursor-ring.merging{
+  scale: 1.6;
+  border-color: var(--cyan);
+  box-shadow: 0 0 24px var(--cyan);
+  transition: scale .25s var(--bounce), border-color .25s, box-shadow .25s;
+}
+
+/* Lightweight click-confetti particles (spawned + removed by JS). */
+.confetti-bit{
+  position:fixed; top:0; left:0; width:7px; height:7px; border-radius:50%;
+  pointer-events:none; z-index:9998; will-change:transform, opacity;
+}
+
+/* Card icons give a friendly wiggle on hover. */
+.tilt-card:hover .card-icon{ animation: link-wiggle .5s var(--bounce); }
+
+/* Scroll-indicator gets a touch more bounce energy. */
+.scroll-indicator{ transition: scale .3s var(--bounce); cursor:pointer; }
+.scroll-indicator:hover{ scale: 1.1; }
+
+
+</style>
+</head>
+<body>
+
+<!-- ================= CUSTOM CURSOR ================= -->
+<div class="cursor" aria-hidden="true">
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+</div>
+
+<!-- ================= SCROLL PROGRESS BAR ================= -->
+<div class="progress-bar" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ================= SIGNATURE SPINE (comet thread, desktop only) ================= -->
+<svg class="spine" id="spineSvg" viewBox="0 0 100 4000" preserveAspectRatio="none" aria-hidden="true">
+  <path id="spinePath" d="M50,0 L50,4000" />
+  <circle id="spineComet" r="3.2" cx="50" cy="0" />
+</svg>
+
+<!-- ================= NAVIGATION ================= -->
+<header class="nav" id="siteNav">
+  <a href="#hero" class="nav-logo interactive" id="navLogo">AETHERIA<span>//</span></a>
+  <nav class="nav-links" aria-label="Section navigation">
+    <a href="#journey" class="interactive">Journey</a>
+    <a href="#innovation" class="interactive">Innovation</a>
+    <a href="#cosmos" class="interactive">Cosmos</a>
+    <a href="#city" class="interactive">City</a>
+    <a href="#cta" class="nav-cta interactive">Begin</a>
+  </nav>
+  <div class="nav-toggles">
+    <button class="icon-btn interactive nav-hamburger" id="navHamburger" aria-label="Open menu" title="Menu">
+      <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="1.8"/><line x1="4" y1="17" x2="20" y2="17" stroke="currentColor" stroke-width="1.8"/></svg>
+    </button>
+    <button class="icon-btn interactive" id="soundToggle" aria-label="Toggle sound" title="Toggle interface sound">
+      <svg viewBox="0 0 24 24" class="icon-on"><path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/><path d="M16 8a5 5 0 010 8" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+      <svg viewBox="0 0 24 24" class="icon-off" hidden><path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/><line x1="15" y1="9" x2="21" y2="15" stroke="currentColor" stroke-width="1.6"/><line x1="21" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+    <button class="icon-btn interactive" id="themeToggle" aria-label="Toggle light and dark mode" title="Toggle theme">
+      <svg viewBox="0 0 24 24" class="icon-moon"><path d="M21 12.5A9 9 0 1111.5 3 7 7 0 0021 12.5z" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" class="icon-sun" hidden><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="1.6"><line x1="12" y1="1.5" x2="12" y2="4.5"/><line x1="12" y1="19.5" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4.5" y2="12"/><line x1="19.5" y1="12" x2="22.5" y2="12"/><line x1="4.6" y1="4.6" x2="6.7" y2="6.7"/><line x1="17.3" y1="17.3" x2="19.4" y2="19.4"/><line x1="4.6" y1="19.4" x2="6.7" y2="17.3"/><line x1="17.3" y1="6.7" x2="19.4" y2="4.6"/></g></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============================================================ -->
+  <!-- 1. HERO SECTION                                               -->
+  <!-- ============================================================ -->
+  <section class="section hero" id="hero">
+    <!-- Background layer -->
+    <canvas id="starCanvas" class="layer bg-stars"></canvas>
+    <div class="layer bg-nebula" data-speed="0.15"></div>
+    <div class="layer bg-mountains" data-speed="0.25">
+      <svg viewBox="0 0 1600 400" preserveAspectRatio="none"><path d="M0,400 L0,260 L120,180 L260,250 L420,120 L600,230 L780,90 L960,220 L1140,140 L1320,240 L1460,160 L1600,260 L1600,400 Z"/></svg>
+    </div>
+
+    <!-- Midground layer -->
+    <div class="layer mid-grid" data-speed="0.4"></div>
+    <div class="float-shape shape-ring" data-speed="0.5" data-mouse="18"></div>
+    <div class="float-shape shape-cube" data-speed="0.6" data-mouse="-26"></div>
+
+    <!-- Foreground layer -->
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="dot"></span>WELCOME TO AETHERIA</p>
+      <h1 class="hero-title">
+        <span class="line">THE FUTURE</span>
+        <span class="line accent">IN MOTION</span>
+      </h1>
+      <p class="hero-sub">A living interface for what comes next — scroll to move through it.</p>
+    </div>
+
+    <div class="scroll-indicator interactive">
+      <span>SCROLL</span>
+      <div class="mouse-icon"><div class="wheel"></div></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 2. JOURNEY SECTION                                            -->
+  <!-- ============================================================ -->
+  <section class="section journey" id="journey">
+    <div class="layer bg-gradient-journey" data-speed="0.1"></div>
+    <canvas id="journeyStarCanvas" class="layer bg-stars" data-speed="0.2"></canvas>
+
+    <div class="float-shape island island-1" data-speed="0.35" data-mouse="14">
+      <div class="island-body"></div><div class="island-glow"></div>
+    </div>
+    <div class="float-shape island island-2" data-speed="0.55" data-mouse="-20">
+      <div class="island-body small"></div><div class="island-glow"></div>
+    </div>
+    <div class="float-shape satellite-deco" data-speed="0.7" data-mouse="30"></div>
+
+    <div class="section-inner narrow">
+      <p class="eyebrow"><span class="dot"></span>CHAPTER ONE</p>
+      <h2 class="section-title">The Journey</h2>
+      <div class="story-lines">
+        <p class="reveal-line">Every leap forward begins as a quiet signal —</p>
+        <p class="reveal-line">a single idea, drifting between what is and what could be.</p>
+        <p class="reveal-line">AETHERIA carries that signal across the unknown,</p>
+        <p class="reveal-line"><span class="accent-text">turning distance into discovery.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 3. INNOVATION SECTION                                         -->
+  <!-- ============================================================ -->
+  <section class="section innovation" id="innovation">
+    <div class="layer bg-gradient-innovation" data-speed="0.1"></div>
+    <div class="layer circuit-lines" data-speed="0.25"></div>
+
+    <div class="section-inner">
+      <p class="eyebrow"><span class="dot"></span>CHAPTER TWO</p>
+      <h2 class="section-title">Built For What's Next</h2>
+      <p class="section-lede">Four systems, one intelligence — each engineered to move faster than the world around it.</p>
+
+      <div class="card-grid">
+        <article class="tilt-card interactive">
+          <div class="tilt-inner">
+            <svg class="card-icon" viewBox="0 0 48 48"><circle cx="24" cy="24" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8" stroke="currentColor" stroke-width="2"/></svg>
+            <h3>Neural Cognition</h3>
+            <p>Pattern recognition that learns faster than it forgets, refining itself with every cycle.</p>
+          </div>
+        </article>
+        <article class="tilt-card interactive">
+          <div class="tilt-inner">
+            <svg class="card-icon" viewBox="0 0 48 48"><path d="M8 24a16 16 0 0132 0 16 16 0 01-32 0z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="24" r="4" fill="currentColor"/><path d="M24 8v8M24 32v8" stroke="currentColor" stroke-width="2"/></svg>
+            <h3>Quantum Network</h3>
+            <p>Entangled connections that route information before the request is even finished.</p>
+          </div>
+        </article>
+        <article class="tilt-card interactive">
+          <div class="tilt-inner">
+            <svg class="card-icon" viewBox="0 0 48 48"><rect x="14" y="10" width="20" height="28" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><line x1="20" y1="34" x2="28" y2="34" stroke="currentColor" stroke-width="2"/><circle cx="24" cy="18" r="3" fill="currentColor"/></svg>
+            <h3>Neural Interface</h3>
+            <p>A direct line between thought and action, translating intent into instant response.</p>
+          </div>
+        </article>
+        <article class="tilt-card interactive">
+          <div class="tilt-inner">
+            <svg class="card-icon" viewBox="0 0 48 48"><rect x="8" y="16" width="32" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="26" r="2" fill="currentColor"/><circle cx="24" cy="26" r="2" fill="currentColor"/><circle cx="32" cy="26" r="2" fill="currentColor"/><path d="M24 16V8" stroke="currentColor" stroke-width="2"/></svg>
+            <h3>Autonomous Systems</h3>
+            <p>Machines that decide, adapt, and act — built to navigate problems no one's written yet.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 4. SPACE EXPLORATION SECTION                                  -->
+  <!-- ============================================================ -->
+  <section class="section cosmos" id="cosmos">
+    <canvas id="cosmosCanvas" class="layer bg-stars"></canvas>
+
+    <div class="planet planet-1" data-speed="0.2"></div>
+    <div class="planet planet-2" data-speed="0.45"></div>
+    <div class="planet planet-3" data-speed="0.65"></div>
+    <div class="orbit-ring" data-speed="0.3"><div class="satellite"></div></div>
+
+    <div class="section-inner narrow center">
+      <p class="eyebrow"><span class="dot"></span>CHAPTER THREE</p>
+      <h2 class="section-title">Charting The Unknown</h2>
+      <p class="section-lede">Beyond the atmosphere, every orbit is a question we haven't asked yet — and every satellite, a small attempt at an answer.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 5. FUTURE CITY SECTION                                        -->
+  <!-- ============================================================ -->
+  <section class="section city" id="city">
+    <div class="layer city-sky" data-speed="0.1"></div>
+    <div class="layer light-sweep" id="lightSweep"></div>
+
+    <div class="layer city-back" data-speed="0.3">
+      <svg viewBox="0 0 1600 500" preserveAspectRatio="none">
+        <rect x="40" y="180" width="90" height="320"/><rect x="160" y="120" width="70" height="380"/>
+        <rect x="260" y="220" width="110" height="280"/><rect x="420" y="80" width="80" height="420"/>
+        <rect x="540" y="200" width="100" height="300"/><rect x="680" y="140" width="70" height="360"/>
+        <rect x="800" y="60" width="90" height="440"/><rect x="930" y="190" width="120" height="310"/>
+        <rect x="1090" y="110" width="80" height="390"/><rect x="1210" y="230" width="100" height="270"/>
+        <rect x="1350" y="90" width="90" height="410"/><rect x="1480" y="200" width="110" height="300"/>
+      </svg>
+    </div>
+    <div class="layer city-mid" data-speed="0.55">
+      <svg viewBox="0 0 1600 420" preserveAspectRatio="none">
+        <rect x="0" y="240" width="140" height="180"/><rect x="160" y="180" width="90" height="240"/>
+        <rect x="270" y="260" width="130" height="160"/><rect x="430" y="140" width="100" height="280"/>
+        <rect x="560" y="220" width="150" height="200"/><rect x="740" y="160" width="90" height="260"/>
+        <rect x="860" y="240" width="140" height="180"/><rect x="1030" y="120" width="100" height="300"/>
+        <rect x="1160" y="220" width="160" height="200"/><rect x="1350" y="170" width="110" height="250"/>
+        <rect x="1490" y="240" width="120" height="180"/>
+      </svg>
+    </div>
+    <div class="float-shape drone" data-speed="0.8" data-mouse="22"></div>
+    <div class="float-shape drone drone-2" data-speed="0.9" data-mouse="-16"></div>
+
+    <div class="section-inner narrow">
+      <p class="eyebrow"><span class="dot"></span>CHAPTER FOUR</p>
+      <h2 class="section-title">The City That Never Sleeps</h2>
+      <p class="section-lede">Light moves through it like a pulse — every window a small decision, every street a current of motion.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- 6. FINAL CALL-TO-ACTION SECTION                               -->
+  <!-- ============================================================ -->
+  <section class="section cta" id="cta">
+    <div class="layer bg-gradient-cta" data-speed="0.1"></div>
+    <canvas id="ctaStarCanvas" class="layer bg-stars" data-speed="0.2"></canvas>
+    <div class="float-shape cta-ring" data-speed="0.3" data-mouse="16"></div>
+
+    <div class="section-inner narrow center">
+      <p class="eyebrow"><span class="dot"></span>YOUR MOVE</p>
+      <h2 class="section-title big">Your Future<br><span class="accent">Starts Here</span></h2>
+      <p class="section-lede">The journey doesn't end at the bottom of the page — it begins the moment you decide to build it.</p>
+      <button class="magnetic-btn interactive" id="ctaButton">
+        <span>Begin The Journey</span>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>AETHERIA — Crafted as a parallax study in motion &amp; depth.</p>
+</footer>
+
+<!-- Toast for CTA button feedback -->
+<div class="toast" id="toast">The journey has begun.</div>
+
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/* ============================================================
+   AETHERIA — Parallax Future-of-Technology Landing Page
+   JavaScript
+   ============================================================
+   Sections:
+   1. Utilities & state
+   2. Custom cursor
+   3. Scroll progress bar + signature spine
+   4. Nav behaviour (scrolled state + mobile menu)
+   5. Parallax engine (scroll-speed layers)
+   6. Mouse-parallax engine (data-mouse layers)
+   7. Starfield canvases (hero + cosmos)
+   8. GSAP ScrollTrigger reveals
+   9. Card tilt interaction
+   10. Magnetic CTA button + toast
+   11. Theme toggle (dark/light)
+   12. Sound toggle (Web Audio UI feedback)
+   ============================================================ */
+
+(() => {
+  'use strict';
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia('(hover: none)').matches;
+
+  /* ---------- 1. Utilities ---------- */
+  const lerp = (a, b, n) => a + (b - a) * n;
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  let scrollY = window.scrollY;
+  let docHeight = 1;
+  const recalcDocHeight = () => {
+    docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  };
+  recalcDocHeight();
+  window.addEventListener('resize', recalcDocHeight);
+
+  // Shared pointer position (mouse OR touch) so the custom cursor and the
+  // interactive starfields all react to the same coordinate, in sync.
+  // Starts off-screen so nothing reacts until the person actually moves.
+  const pointer = { x: -9999, y: -9999, active: false, lastMove: 0 };
+  window.addEventListener('pointermove', (e) => {
+    pointer.x = e.clientX;
+    pointer.y = e.clientY;
+    pointer.active = true;
+    pointer.lastMove = performance.now();
+  }, { passive: true });
+  window.addEventListener('pointerleave', () => { pointer.active = false; });
+  // If the pointer hasn't moved in a while (or this is a touch device that
+  // just lifted off), let the starfield relax back to ambient drift.
+  function isPointerLive() {
+    return pointer.active && (performance.now() - pointer.lastMove) < 2200;
+  }
+
+  /* ============================================================
+     2. CUSTOM CURSOR
+     ============================================================ */
+  if (!isTouch) {
+    const dot = document.querySelector('.cursor-dot');
+    const ring = document.querySelector('.cursor-ring');
+    let ringX = pointer.x, ringY = pointer.y;
+
+    window.addEventListener('pointermove', (e) => {
+      dot.style.left = e.clientX + 'px';
+      dot.style.top = e.clientY + 'px';
+    }, { passive: true });
+
+    function animateCursor() {
+      ringX = lerp(ringX, pointer.x, 0.18);
+      ringY = lerp(ringY, pointer.y, 0.18);
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    document.querySelectorAll('.interactive').forEach((el) => {
+      el.addEventListener('mouseenter', () => ring.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('hovering'));
+    });
+
+    // Whenever a star drifts close enough to "merge" into the cursor
+    // (dispatched from the starfield engine below), give the ring a
+    // happy little pulse — the visual payoff of the merge.
+    let mergePulseTimer;
+    document.addEventListener('aetheria:starmerge', () => {
+      ring.classList.add('merging');
+      clearTimeout(mergePulseTimer);
+      mergePulseTimer = setTimeout(() => ring.classList.remove('merging'), 260);
+    });
+  } else {
+    document.querySelector('.cursor').style.display = 'none';
+  }
+
+  /* ============================================================
+     3. SCROLL PROGRESS BAR + SIGNATURE SPINE
+     ============================================================ */
+  const progressFill = document.getElementById('progressFill');
+  const spinePath = document.getElementById('spinePath');
+  const spineComet = document.getElementById('spineComet');
+  const spineSvg = document.getElementById('spineSvg');
+  const spineLength = spinePath ? spinePath.getTotalLength() : 0;
+  if (spinePath) spinePath.style.strokeDasharray = spineLength;
+
+  let spineFullLength = spineLength;
+
+  function recalcSpineGeometry() {
+    if (!spinePath || window.innerWidth <= 900) return;
+    const fullHeight = document.documentElement.scrollHeight;
+    spineSvg.style.height = fullHeight + 'px';
+    spineSvg.setAttribute('viewBox', `0 0 100 ${fullHeight}`);
+    spinePath.setAttribute('d', `M50,0 L50,${fullHeight}`);
+    spineFullLength = spinePath.getTotalLength();
+    spinePath.style.strokeDasharray = spineFullLength;
+  }
+  recalcSpineGeometry();
+  window.addEventListener('resize', recalcSpineGeometry);
+
+  function updateProgressAndSpine() {
+    const pct = clamp(scrollY / docHeight, 0, 1);
+    progressFill.style.width = (pct * 100) + '%';
+
+    if (spinePath && spineComet && window.innerWidth > 900) {
+      spinePath.style.strokeDashoffset = spineFullLength - spineFullLength * pct;
+      const point = spinePath.getPointAtLength(spineFullLength * pct);
+      spineComet.setAttribute('cx', point.x);
+      spineComet.setAttribute('cy', point.y);
+    }
+  }
+
+  /* ============================================================
+     4. NAV BEHAVIOUR
+     ============================================================ */
+  const nav = document.getElementById('siteNav');
+  const navLinks = document.querySelector('.nav-links');
+  const hamburger = document.getElementById('navHamburger');
+
+  function updateNavState() {
+    nav.classList.toggle('scrolled', scrollY > 40);
+  }
+
+  hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+
+  /* ============================================================
+     5. PARALLAX ENGINE — elements with [data-speed]
+     ============================================================
+     Each layer scrolls at (1 - speed) relative ratio so that a
+     speed close to 0 feels almost fixed (far background) and a
+     speed close to 1 moves with the page (foreground/content).
+  */
+  const speedLayers = Array.from(document.querySelectorAll('[data-speed]')).map((el) => ({
+    el,
+    speed: parseFloat(el.dataset.speed),
+    sectionTop: 0
+  }));
+
+  function recalcSectionOffsets() {
+    speedLayers.forEach((layer) => {
+      const section = layer.el.closest('.section');
+      layer.sectionTop = section ? section.offsetTop : 0;
+    });
+  }
+  recalcSectionOffsets();
+  window.addEventListener('resize', recalcSectionOffsets);
+
+  function updateParallax() {
+    speedLayers.forEach((layer) => {
+      // Distance scrolled relative to the layer's own section start.
+      const relative = (scrollY - layer.sectionTop) * layer.speed;
+      layer.el.style.transform = `translate3d(0, ${relative}px, 0)`;
+    });
+  }
+
+  /* ============================================================
+     6. MOUSE-PARALLAX ENGINE — elements with [data-mouse]
+     ============================================================ */
+  const mouseLayers = Array.from(document.querySelectorAll('[data-mouse]')).map((el) => ({
+    el,
+    strength: parseFloat(el.dataset.mouse),
+    x: 0, y: 0, tx: 0, ty: 0
+  }));
+
+  if (!isTouch && !reduceMotion) {
+    window.addEventListener('mousemove', (e) => {
+      const nx = (e.clientX / window.innerWidth) - 0.5;
+      const ny = (e.clientY / window.innerHeight) - 0.5;
+      mouseLayers.forEach((l) => {
+        l.tx = nx * l.strength;
+        l.ty = ny * l.strength;
+      });
+    });
+  }
+
+  function updateMouseParallax() {
+    mouseLayers.forEach((l) => {
+      l.x = lerp(l.x, l.tx, 0.06);
+      l.y = lerp(l.y, l.ty, 0.06);
+      // Combine with existing scroll transform by writing a CSS variable
+      l.el.style.setProperty('--mx', l.x + 'px');
+      l.el.style.setProperty('--my', l.y + 'px');
+      l.el.style.translate = `${l.x}px ${l.y}px`;
+    });
+  }
+
+  /* ============================================================
+     MASTER SCROLL/RAF LOOP
+     ============================================================ */
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+
+  function masterLoop() {
+    updateProgressAndSpine();
+    updateNavState();
+    updateParallax();
+    updateMouseParallax();
+    requestAnimationFrame(masterLoop);
+  }
+  masterLoop();
+
+  /* ============================================================
+     7. STARFIELD CANVASES — interactive: stars drift on their own,
+        get pulled toward the pointer when it's nearby, and "merge"
+        (pop into a tiny spark + respawn elsewhere) when they touch it.
+     ============================================================ */
+  const MERGE_COLORS = ['#00f0ff', '#a855f7', '#ff3fb0'];
+
+  function initStarfield(canvasId, density) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    let sparks = []; // transient burst particles from a merge
+    let w, h, rect;
+
+    function spawnStar(fadeIn) {
+      return {
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.12,
+        vy: (Math.random() - 0.5) * 0.12,
+        r: Math.random() * 1.5 + 0.4,
+        baseAlpha: Math.random() * 0.6 + 0.35,
+        alpha: fadeIn ? 0 : (Math.random() * 0.6 + 0.35),
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        phase: Math.random() * Math.PI * 2
+      };
+    }
+
+    function resize() {
+      w = canvas.width = canvas.offsetWidth;
+      h = canvas.height = canvas.offsetHeight;
+      const count = Math.floor((w * h) / density);
+      stars = Array.from({ length: count }, () => spawnStar(false));
+      rect = canvas.getBoundingClientRect();
+    }
+
+    function spawnSparks(x, y, color) {
+      for (let i = 0; i < 6; i++) {
+        const angle = (Math.PI * 2 * i) / 6 + Math.random() * 0.5;
+        const speed = Math.random() * 1.6 + 0.6;
+        sparks.push({
+          x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+          life: 1, color
+        });
+      }
+      // Let the custom cursor know a merge just happened nearby.
+      document.dispatchEvent(new CustomEvent('aetheria:starmerge'));
+    }
+
+    let t = 0;
+    const ATTRACT_RADIUS = 130;
+    const MERGE_RADIUS = 13;
+
+    function draw() {
+      t += 1;
+      ctx.clearRect(0, 0, w, h);
+
+      // Refresh the canvas's viewport rect occasionally — cheap enough to
+      // do every frame here since each section only has one canvas.
+      rect = canvas.getBoundingClientRect();
+      const live = isPointerLive() && pointer.x >= rect.left && pointer.x <= rect.right
+                   && pointer.y >= rect.top && pointer.y <= rect.bottom;
+      const px = pointer.x - rect.left;
+      const py = pointer.y - rect.top;
+
+      stars.forEach((s, i) => {
+        // Ambient drift, wrapping around the edges so the field feels alive.
+        s.x += s.vx; s.y += s.vy;
+        if (s.x < -5) s.x = w + 5; if (s.x > w + 5) s.x = -5;
+        if (s.y < -5) s.y = h + 5; if (s.y > h + 5) s.y = -5;
+
+        if (live) {
+          const dx = px - s.x, dy = py - s.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MERGE_RADIUS) {
+            // Merge into the cursor: pop a little spark and respawn.
+            spawnSparks(s.x, s.y, MERGE_COLORS[i % MERGE_COLORS.length]);
+            stars[i] = spawnStar(true);
+            return;
+          }
+          if (dist < ATTRACT_RADIUS) {
+            const pull = 1 - dist / ATTRACT_RADIUS;
+            s.x += dx * pull * 0.05;
+            s.y += dy * pull * 0.05;
+          }
+        }
+
+        // Fade newly-respawned stars back in smoothly.
+        s.alpha = lerp(s.alpha, s.baseAlpha, 0.04);
+        const twinkle = Math.sin(t * s.twinkleSpeed + s.phase) * 0.25;
+        ctx.globalAlpha = clamp(s.alpha + twinkle, 0, 1);
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Draw + advance the little merge sparks.
+      ctx.globalAlpha = 1;
+      sparks = sparks.filter((sp) => sp.life > 0.02);
+      sparks.forEach((sp) => {
+        sp.x += sp.vx; sp.y += sp.vy; sp.life *= 0.92;
+        ctx.globalAlpha = sp.life;
+        ctx.fillStyle = sp.color;
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, 1.8 * sp.life + 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      requestAnimationFrame(draw);
+    }
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    resize();
+    if (reduceMotion) {
+      // Single static render — no drift, no pointer attraction, no rAF loop.
+      ctx.fillStyle = '#ffffff';
+      stars.forEach((s) => {
+        ctx.globalAlpha = s.baseAlpha;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    } else {
+      draw();
+    }
+  }
+  initStarfield('starCanvas', 3200);
+  initStarfield('cosmosCanvas', 2600);
+  initStarfield('journeyStarCanvas', 3800);
+  initStarfield('ctaStarCanvas', 3600);
+
+  /* ============================================================
+     8. GSAP SCROLLTRIGGER REVEALS
+     ============================================================ */
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero title lines: slide up + fade on load.
+    gsap.from('.hero-title .line', {
+      yPercent: 110, opacity: 0, duration: 1.1, ease: 'power3.out', stagger: 0.12, delay: 0.2
+    });
+    gsap.from('.hero-sub, .scroll-indicator', {
+      opacity: 0, y: 20, duration: 1, ease: 'power2.out', delay: 0.7
+    });
+
+    // Generic section title / lede reveal for every section after hero.
+    document.querySelectorAll('.section:not(.hero) .eyebrow, .section:not(.hero) .section-title, .section:not(.hero) .section-lede').forEach((el) => {
+      gsap.fromTo(el, { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%' }
+      });
+    });
+
+    // Journey story lines reveal one by one.
+    gsap.utils.toArray('.reveal-line').forEach((line, i) => {
+      gsap.fromTo(line, { opacity: 0, y: 30 }, {
+        opacity: 1, y: 0, color: 'var(--white)', duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: line, start: 'top 88%' }
+      });
+    });
+
+    // Innovation cards: staggered scale + fade reveal.
+    gsap.fromTo('.tilt-card', { opacity: 0, y: 60, scale: 0.92 }, {
+      opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out', stagger: 0.12,
+      scrollTrigger: { trigger: '.card-grid', start: 'top 80%' }
+    });
+
+    // Cosmos planets drift in with a scale pop.
+    gsap.utils.toArray('.planet').forEach((p, i) => {
+      gsap.fromTo(p, { opacity: 0, scale: 0.6 }, {
+        opacity: 1, scale: 1, duration: 1, ease: 'back.out(1.4)', delay: i * 0.1,
+        scrollTrigger: { trigger: '.cosmos', start: 'top 70%' }
+      });
+    });
+
+    // CTA button pop + ring fade.
+    gsap.fromTo('.magnetic-btn', { opacity: 0, y: 30 }, {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+      scrollTrigger: { trigger: '.cta', start: 'top 60%' }
+    });
+    gsap.fromTo('.cta-ring', { opacity: 0, scale: 0.7 }, {
+      opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out',
+      scrollTrigger: { trigger: '.cta', start: 'top 70%' }
+    });
+  }
+
+  /* ============================================================
+     9. CARD TILT INTERACTION (mouse-responsive 3D cards)
+     ============================================================ */
+  if (!isTouch && !reduceMotion) {
+    document.querySelectorAll('.tilt-card').forEach((card) => {
+      const inner = card.querySelector('.tilt-inner');
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        inner.style.transform = `rotateY(${px * 14}deg) rotateX(${-py * 14}deg) translateZ(10px)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        inner.style.transform = 'rotateY(0) rotateX(0) translateZ(0)';
+      });
+    });
+  }
+
+  /* ============================================================
+     10. MAGNETIC CTA BUTTON + TOAST
+     ============================================================ */
+  const ctaButton = document.getElementById('ctaButton');
+  const toast = document.getElementById('toast');
+
+  if (!isTouch && !reduceMotion) {
+    ctaButton.addEventListener('mousemove', (e) => {
+      const rect = ctaButton.getBoundingClientRect();
+      const mx = (e.clientX - rect.left - rect.width / 2) * 0.3;
+      const my = (e.clientY - rect.top - rect.height / 2) * 0.4;
+      ctaButton.style.transform = `translate(${mx}px, ${my}px)`;
+    });
+    ctaButton.addEventListener('mouseleave', () => {
+      ctaButton.style.transform = 'translate(0,0)';
+    });
+  }
+
+  let toastTimer;
+  ctaButton.addEventListener('click', () => {
+    playUiSound('confirm');
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    const rect = ctaButton.getBoundingClientRect();
+    confettiBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 18);
+  });
+
+  /* ============================================================
+     11. THEME TOGGLE
+     ============================================================ */
+  const themeToggle = document.getElementById('themeToggle');
+  const htmlEl = document.documentElement;
+
+  themeToggle.addEventListener('click', () => {
+    const isLight = htmlEl.getAttribute('data-theme') === 'light';
+    htmlEl.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    themeToggle.querySelector('.icon-moon').hidden = isLight;
+    themeToggle.querySelector('.icon-sun').hidden = !isLight;
+    playUiSound('click');
+  });
+
+  /* ============================================================
+     12. SOUND TOGGLE — light Web Audio UI feedback (no external files)
+     ============================================================ */
+  let soundOn = false;
+  let audioCtx = null;
+  const soundToggle = document.getElementById('soundToggle');
+
+  function ensureAudioCtx() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    return audioCtx;
+  }
+
+  function playUiSound(type) {
+    if (!soundOn) return;
+    const ctx = ensureAudioCtx();
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    const now = ctx.currentTime;
+    if (type === 'click') {
+      osc.frequency.setValueAtTime(660, now);
+      gain.gain.setValueAtTime(0.06, now);
+    } else if (type === 'confirm') {
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.linearRampToValueAtTime(880, now + 0.15);
+      gain.gain.setValueAtTime(0.08, now);
+    } else {
+      osc.frequency.setValueAtTime(520, now);
+      gain.gain.setValueAtTime(0.05, now);
+    }
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+    osc.start(now);
+    osc.stop(now + 0.26);
+  }
+
+  soundToggle.addEventListener('click', () => {
+    soundOn = !soundOn;
+    soundToggle.querySelector('.icon-on').hidden = !soundOn;
+    soundToggle.querySelector('.icon-off').hidden = soundOn;
+    if (soundOn) { ensureAudioCtx(); playUiSound('click'); }
+  });
+
+  // Subtle hover tick on interactive elements when sound is enabled.
+  document.querySelectorAll('.interactive').forEach((el) => {
+    el.addEventListener('mouseenter', () => playUiSound('hover'));
+  });
+
+  /* ============================================================
+     13. CLICK CONFETTI — a little burst of color wherever you click.
+     ============================================================ */
+  function confettiBurst(x, y, count) {
+    if (reduceMotion) return;
+    for (let i = 0; i < count; i++) {
+      const bit = document.createElement('div');
+      bit.className = 'confetti-bit';
+      const color = MERGE_COLORS[i % MERGE_COLORS.length];
+      bit.style.background = color;
+      bit.style.boxShadow = `0 0 6px ${color}`;
+      document.body.appendChild(bit);
+
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 40 + Math.random() * 70;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist - 20; // slight upward bias
+      const rot = (Math.random() - 0.5) * 480;
+
+      bit.style.left = x + 'px';
+      bit.style.top = y + 'px';
+      bit.style.opacity = '1';
+      bit.style.transform = 'translate(-50%, -50%) scale(1) rotate(0deg)';
+      bit.style.transition = `transform ${600 + Math.random() * 300}ms cubic-bezier(.16,.84,.32,1), opacity 700ms ease`;
+
+      requestAnimationFrame(() => {
+        bit.style.transform = `translate(${dx - 3.5}px, ${dy - 3.5}px) scale(0.3) rotate(${rot}deg)`;
+        bit.style.opacity = '0';
+      });
+      setTimeout(() => bit.remove(), 1000);
+    }
+  }
+
+  // A gentle sparkle on most clicks…
+  let lastBurst = 0;
+  document.addEventListener('click', (e) => {
+    const now = performance.now();
+    if (now - lastBurst < 150) return; // throttle rapid clicks
+    lastBurst = now;
+    confettiBurst(e.clientX, e.clientY, 5);
+  });
+
+  // …and a happy little bounce when the logo is clicked.
+  const navLogo = document.getElementById('navLogo');
+  navLogo.addEventListener('click', () => {
+    navLogo.classList.remove('bounce');
+    requestAnimationFrame(() => navLogo.classList.add('bounce'));
+  });
+
+  // The scroll indicator is now a real shortcut down to the next chapter.
+  document.querySelector('.scroll-indicator').addEventListener('click', () => {
+    document.getElementById('journey').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  /* ---------- Recalculate layout-dependent values on resize ---------- */
+  window.addEventListener('resize', () => {
+    recalcDocHeight();
+    recalcSectionOffsets();
+  });
+
+  window.addEventListener('load', () => {
+    recalcDocHeight();
+    recalcSectionOffsets();
+    recalcSpineGeometry();
+  });
+  // Fonts can shift layout slightly after first paint.
+  setTimeout(() => {
+    recalcDocHeight();
+    recalcSectionOffsets();
+    recalcSpineGeometry();
+  }, 800);
+})();
+
+</script>
+</body>
+</html>
